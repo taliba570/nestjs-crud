@@ -13,18 +13,22 @@ import {
 import { Request } from 'express';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
+import { CatService } from './cat.service';
+import { Cat } from './interfaces/cat.interface';
 
 @Controller('cats')
 export class CatController {
+  constructor(private readonly catService: CatService) {}
+
   @Post()
-  async create(@Body() createCatDto: CreateCatDto): Promise<string> {
-    return `Cat is created ${createCatDto}`;
+  async create(@Body() createCatDto: CreateCatDto) {
+    await this.catService.create(createCatDto);
   }
 
   @Get()
-  async findAll(@Req() req: Request): Promise<string> {
+  async findAll(@Req() req: Request): Promise<Cat[]> {
     console.log(req);
-    return 'All cats are returned';
+    return this.catService.findAll();
   }
 
   @Get(':id')
