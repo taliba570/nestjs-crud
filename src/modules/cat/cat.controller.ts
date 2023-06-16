@@ -1,64 +1,26 @@
-import {
-  All,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Put,
-  Req,
-} from '@nestjs/common';
-import { Request } from 'express';
-import { CreateCatDto } from './dto/create-cat.dto';
-import { UpdateCatDto } from './dto/update-cat.dto';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CatService } from './cat.service';
+import { CreateCatDto } from './dto/create-cat.dto';
 import { Cat } from './interfaces/cat.interface';
 
 @Controller('cats')
+@ApiTags('Cat CRUD APIs')
 export class CatController {
   constructor(private readonly catService: CatService) {}
 
   @Post()
-  async create(@Body() createCatDto: CreateCatDto) {
-    await this.catService.create(createCatDto);
+  async create(@Body() cat: CreateCatDto): Promise<Cat> {
+    return this.catService.create(cat);
   }
 
   @Get()
-  async findAll(@Req() req: Request): Promise<Cat[]> {
-    console.log(req);
+  async findAll(): Promise<Cat[]> {
     return this.catService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: number): Promise<string> {
-    return `Cat found with id # {${id}}`;
-  }
-
-  @Put(':id')
-  async replace(
-    @Param('id') id: string,
-    @Body() updateCatDto: UpdateCatDto,
-  ): Promise<string> {
-    return `Whole cat data with # {${id}} is replaced with ${updateCatDto}`;
-  }
-
-  @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateCatDto: UpdateCatDto,
-  ): Promise<string> {
-    return `Update given data of cat # {${id}} with data ${updateCatDto}`;
-  }
-
-  @Delete(':id')
-  async delete(@Param('id') id: string): Promise<string> {
-    return `Cat deleted with id # ${id}`;
-  }
-
-  @All()
-  async invalidRequest(): Promise<string> {
-    return 'Invalid request';
+  @Get(':name')
+  async findOne(@Param('name') name: string): Promise<Cat> {
+    return this.catService.findOne(name);
   }
 }
