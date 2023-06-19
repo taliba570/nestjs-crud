@@ -34,7 +34,6 @@ describe('CatController', () => {
       };
 
       jest.spyOn(catService, 'create').mockImplementation(async () => input);
-      console.log(input);
       expect(await catController.create(input)).toBe(input);
     });
   });

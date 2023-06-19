@@ -12,8 +12,8 @@ describe('DogController', () => {
       controllers: [DogController],
       providers: [DogService],
     }).compile();
-    dogService = moduleRef.get<DogService>(DogService);
-    dogController = moduleRef.get<DogController>(DogController);
+    dogService = await moduleRef.resolve(DogService);
+    dogController = await moduleRef.resolve(DogController);
   });
 
   describe('findAll', () => {
